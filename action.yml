@@ -1,0 +1,29 @@
+name: Trigger workflow_dispatch
+description: >-
+  Triggers a workflow_dispatch run of a specific workflow in another repo in
+  this org. Wraps the GitHub API call so consuming workflows don't each
+  hand-roll it.
+inputs:
+  repo:
+    description: Target repo, e.g. mattjmorrison-homelab/graph-router.
+    required: true
+  workflow:
+    description: Target workflow file name, e.g. publish.yml.
+    required: true
+  ref:
+    description: Branch/ref to run the workflow against.
+    required: false
+    default: main
+  token:
+    description: GitHub token with Actions:write permission on the target repo.
+    required: true
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: bash "${{ github.action_path }}/dispatch.sh"
+      env:
+        REPO: ${{ inputs.repo }}
+        WORKFLOW: ${{ inputs.workflow }}
+        REF: ${{ inputs.ref }}
+        TOKEN: ${{ inputs.token }}

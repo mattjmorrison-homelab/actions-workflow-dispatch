@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+args="$*"
+case "$args" in
+  *"/dispatches"*)
+    if [ "${MOCK_DISPATCH_FAILS:-false}" = "true" ]; then
+      echo "404"
+    else
+      echo "204"
+    fi
+    ;;
+  *)
+    echo "unexpected curl call: $args" >&2
+    exit 1
+    ;;
+esac
